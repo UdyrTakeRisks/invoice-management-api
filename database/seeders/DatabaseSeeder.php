@@ -20,6 +20,6 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         // \App\Models\Tenant::factory(1)->create();
-        
+        // \App\Models\Contract::factory(5)->create();
     }
 }
