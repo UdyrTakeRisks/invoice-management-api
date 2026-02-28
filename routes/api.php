@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,3 +22,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // public route
 Route::post('/auth/login', [UserController::class, 'login']);
+
+Route::group(['middleware' => ['auth:sanctum']], function (){
+    Route::post('/contracts/{contract}/invoices', [InvoiceController::class, 'store']);
+    Route::get('/contracts/{contract}/invoices', [InvoiceController::class, 'index']);
+    Route::get('/invoices/{invoice}', [InvoiceController::class, 'show']);
+    Route::post('/invoices/{invoice}/payments', [InvoiceController::class, 'record']);
+    Route::get('/contracts/{contract}/summary', [InvoiceController::class, 'summary']);
+});

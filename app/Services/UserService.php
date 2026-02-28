@@ -3,20 +3,19 @@
 namespace App\Services;
 
 use App\Interfaces\UserRepositoryInterface;
-use App\Dtos\UserLoginDTO;
+use App\DTOs\UserLoginDTO;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class UserService
 {
-
     public function __construct(
         private UserRepositoryInterface $userRepo
     ) {
     }
 
-    public function userLogin(UserLoginDto $dto)
+    public function userLogin(UserLoginDTO $dto)
     {
         // find the user email from the repo
         $user = $this->userRepo->findByEmail($dto->email);

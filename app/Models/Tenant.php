@@ -17,4 +17,16 @@ class Tenant extends Model
     protected $fillable = [
         'name',
     ];
+
+    /**
+     * relationships
+     */
+    public function contracts()
+    {
+        return $this->hasMany(Contract::class);
+    }
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
 }
