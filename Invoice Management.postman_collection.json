@@ -1,0 +1,341 @@
+{
+  "info": {
+    "_postman_id": "fc4ab8b4-faa9-4c1d-a1ce-07ab7b1babd9",
+    "name": "Invoice Management",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "25138396",
+    "_collection_link": "https://go.postman.co/collection/25138396-fc4ab8b4-faa9-4c1d-a1ce-07ab7b1babd9?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Invoice",
+      "item": [
+        {
+          "name": "List Contract Invoices",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "9|su6fg6JQgQWTHMkVSgHIwkCdbi6ZMV3bvWkQDlq59c9e44a0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}contracts/:id/invoices",
+              "host": [
+                "{{base_url}}contracts"
+              ],
+              "path": [
+                ":id",
+                "invoices"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "cancelled",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "from_date",
+                  "value": "2026-02-20",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "to_date",
+                  "value": "2026-02-28",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "2",
+                  "disabled": true
+                }
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "3"
+                }
+              ]
+            },
+            "description": "## List Contract Invoices\n\nRetrieves a paginated list of all invoices associated with a specific contract. The response includes invoice details such as amounts, status, and payment dates, along with pagination metadata.\n\n---\n\n## Path Variables\n\n| Variable | Type | Description |\n| --- | --- | --- |\n| `id` | integer | The unique ID of the contract whose invoices you want to retrieve. |\n\n---\n\n## Response Fields\n\n### `data[]` — Invoice Object\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `id` | integer | Unique identifier of the invoice. |\n| `invoice_number` | string | Human-readable invoice number (e.g. `INV-003-202602-7396`). |\n| `subtotal` | string | The pre-tax subtotal amount. |\n| `tax_amount` | string | The tax amount applied to the invoice. |\n| `total` | string | The final total amount of the invoice. |\n| `status` | string | Current status of the invoice (e.g. `pending`, `paid`, `cancelled`). |\n| `due_date` | string (date) | The date by which the invoice is due (`YYYY-MM-DD`). |\n| `paid_at` | string (date) | The date the invoice was paid (`YYYY-MM-DD`), or `null` if unpaid. |\n\n### `meta` — Pagination Metadata\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `total` | integer | Total number of records matching the query. |\n| `current_page` | integer | The current page number. |\n| `per_page` | integer | Number of records returned per page. |\n| `last_page` | integer | The last available page number. |\n\n---\n\n## Example Response\n\n``` json\n{\n  \"message\": \"Contract Invoices\",\n  \"data\": [\n    {\n      \"id\": 1,\n      \"invoice_number\": \"INV-003-202602-7396\",\n      \"subtotal\": \"4671.74\",\n      \"tax_amount\": \"2875.12\",\n      \"total\": \"843.04\",\n      \"status\": \"cancelled\",\n      \"due_date\": \"1973-02-25\",\n      \"paid_at\": \"1999-04-09\"\n    }\n  ],\n  \"meta\": {\n    \"invoices_count\": 1,\n    \"total\": 1,\n    \"current_page\": 1,\n    \"per_page\": 10,\n    \"last_page\": 1\n  }\n}\n\n ```"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Invoice Details",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "9|su6fg6JQgQWTHMkVSgHIwkCdbi6ZMV3bvWkQDlq59c9e44a0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}invoices/:id",
+              "host": [
+                "{{base_url}}invoices"
+              ],
+              "path": [
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "2"
+                }
+              ]
+            },
+            "description": "## Get Invoice Details\n\nRetrieves the full details of a specific invoice, including its financial breakdown and a list of all associated payments.\n\n**Method:** `GET`  \n**Endpoint:** `{{base_url}}invoices/:id`\n\n---\n\n## Path Variables\n\n| Variable | Type | Required | Description |\n|----------|------|----------|-------------|\n| `id` | integer | ✅ Yes | The unique identifier of the invoice to retrieve. |\n\n---\n\n## Headers\n\n| Key | Value | Description |\n|-----|-------|-------------|\n| `Accept` | `application/json` | Specifies that the response should be returned in JSON format. |\n\n---\n\n## Response — `200 OK`\n\nReturns a JSON object containing the invoice details along with its payment history.\n\n### Top-Level Fields\n\n| Field | Type | Description |\n|-------|------|-------------|\n| `message` | string | A human-readable message describing the response (e.g., `\"Invoice Details with Payments\"`). |\n| `data` | object | The invoice object containing all details and payments. |\n\n### `data` Object\n\n| Field | Type | Description |\n|-------|------|-------------|\n| `id` | integer | Unique identifier of the invoice. |\n| `invoice_number` | string | The formatted invoice number (e.g., `INV-003-202602-7396`). |\n| `subtotal` | string | The pre-tax subtotal amount of the invoice. |\n| `tax_amount` | string | The tax amount applied to the invoice. |\n| `total` | string | The final total amount of the invoice after all adjustments. |\n| `status` | string | Current status of the invoice. Possible values include `cancelled`, `paid`, `pending`, etc. |\n| `due_date` | string (date) | The date by which the invoice payment is due (`YYYY-MM-DD`). |\n| `paid_at` | string (date) | The date the invoice was marked as paid (`YYYY-MM-DD`). `null` if not yet paid. |\n| `payments` | array | A list of payment transactions associated with this invoice. |\n\n### `data.payments[]` Object\n\n| Field | Type | Description |\n|-------|------|-------------|\n| `id` | integer | Unique identifier of the payment record. |\n| `amount` | string | The amount paid in this transaction. |\n| `payment_method` | string | The method used for payment (e.g., `bank_transfer`, `cash`, `credit_card`). |\n| `reference_number` | string | A unique reference number for tracking the payment transaction. |\n| `paid_at` | string (date) | The date this specific payment was made (`YYYY-MM-DD`). |\n\n---\n\n## Example Response\n\n```json\n{\n  \"message\": \"Invoice Details with Payments\",\n  \"data\": {\n    \"id\": 1,\n    \"invoice_number\": \"INV-003-202602-7396\",\n    \"subtotal\": \"4671.74\",\n    \"tax_amount\": \"2875.12\",\n    \"total\": \"843.04\",\n    \"status\": \"cancelled\",\n    \"due_date\": \"1973-02-25\",\n    \"paid_at\": \"1999-04-09\",\n    \"payments\": [\n      {\n        \"id\": 1,\n        \"amount\": \"3993.79\",\n        \"payment_method\": \"bank_transfer\",\n        \"reference_number\": \"fpC1EnQDCenthSuWklq9\",\n        \"paid_at\": \"2013-10-01\"\n      },\n      {\n        \"id\": 3,\n        \"amount\": \"383.28\",\n        \"payment_method\": \"cash\",\n        \"reference_number\": \"zRlVnaPriAf4Ehc4BMJl\",\n        \"paid_at\": \"2021-03-20\"\n      }\n    ]\n  }\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Invoice",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "9|su6fg6JQgQWTHMkVSgHIwkCdbi6ZMV3bvWkQDlq59c9e44a0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"subtotal\": 1000.00,\r\n    \"due_date\": \"2026-02-27\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}contracts/:id/invoices",
+              "host": [
+                "{{base_url}}contracts"
+              ],
+              "path": [
+                ":id",
+                "invoices"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "3"
+                }
+              ]
+            },
+            "description": "## Create Invoice\n\nCreates a new invoice for a specific contract. The endpoint calculates the tax amount and total automatically based on the provided subtotal.\n\n---\n\n### Path Variables\n\n| Variable | Type | Description |\n|----------|------|-------------|\n| `id` | integer | The unique identifier of the contract for which the invoice is being created. |\n\n---\n\n### Request Body\n\nThe request body must be sent as raw JSON with the `Content-Type: application/json` header.\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| `subtotal` | number | ✅ Yes | The pre-tax amount for the invoice. |\n| `due_date` | string (date) | ✅ Yes | The due date for the invoice payment in `YYYY-MM-DD` format. |\n\n**Example Request Body:**\n```json\n{\n  \"subtotal\": 1000,\n  \"due_date\": \"2026-02-27\"\n}\n```\n\n---\n\n### Response\n\n**Status: `201 Created`**\n\nReturns a success message along with the newly created invoice details.\n\n| Field | Type | Description |\n|-------|------|-------------|\n| `message` | string | A confirmation message indicating the invoice was created successfully. |\n| `data.id` | integer | The unique identifier of the created invoice. |\n| `data.invoice_number` | string | The auto-generated invoice number (e.g., `INV-001-202602-7397`). |\n| `data.subtotal` | string | The pre-tax amount of the invoice. |\n| `data.tax_amount` | string | The calculated tax amount applied to the subtotal. |\n| `data.total` | string | The total amount due, including tax (`subtotal + tax_amount`). |\n| `data.status` | string | The current status of the invoice (e.g., `pending`, `paid`). |\n| `data.due_date` | string (date) | The due date for the invoice payment. |\n| `data.paid_at` | string \\| null | The timestamp when the invoice was paid, or `null` if not yet paid. |\n\n**Example Response:**\n```json\n{\n  \"message\": \"Invoice is created successfully\",\n  \"data\": {\n    \"id\": 12,\n    \"invoice_number\": \"INV-001-202602-7397\",\n    \"subtotal\": \"1000.00\",\n    \"tax_amount\": \"175.00\",\n    \"total\": \"1175.00\",\n    \"status\": \"pending\",\n    \"due_date\": \"2026-02-27\",\n    \"paid_at\": null\n  }\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Record Payment",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "9|su6fg6JQgQWTHMkVSgHIwkCdbi6ZMV3bvWkQDlq59c9e44a0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"amount\": 1684.51,\r\n    \"payment_method\": \"cash\",\r\n    \"reference_number\": \"asdDSADsdasdAGHS\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}invoices/:id/payments",
+              "host": [
+                "{{base_url}}invoices"
+              ],
+              "path": [
+                ":id",
+                "payments"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "2"
+                }
+              ]
+            },
+            "description": "## Record Payment\n\nRecords a payment against a specific invoice. On success, the payment details are persisted and returned along with a confirmation message.\n\n---\n\n### Path Variable\n\n| Variable | Type | Description |\n|----------|------|-------------|\n| `id` | integer | The unique identifier of the invoice to record the payment for. **Example:** `2` |\n\n---\n\n### Request Headers\n\n| Header | Value |\n|--------|-------|\n| `Accept` | `application/json` |\n\n---\n\n### Request Body\n\nSend a JSON object with the following fields:\n\n| Field | Type | Description |\n|-------|------|-------------|\n| `amount` | number | The payment amount. **Example:** `1684.51` |\n| `payment_method` | string | The method used for payment (e.g., `cash`, `credit_card`, `bank_transfer`). **Example:** `\"cash\"` |\n| `reference_number` | string | A unique reference number for the payment transaction. **Example:** `\"asdDSADsdasdAGHSUUU\"` |\n\n**Example Request Body:**\n```json\n{\n  \"amount\": 1684.51,\n  \"payment_method\": \"cash\",\n  \"reference_number\": \"asdDSADsdasdAGHSUUU\"\n}\n```\n\n---\n\n### Successful Response — `201 Created`\n\nReturns a confirmation message and the recorded payment object.\n\n```json\n{\n  \"message\": \"Payment is recorded successfully\",\n  \"data\": {\n    \"id\": 14,\n    \"amount\": 1684.51,\n    \"payment_method\": \"cash\",\n    \"reference_number\": \"asdDSADsdasdAGHSUUU\",\n    \"paid_at\": \"2026-02-28\"\n  }\n}\n```\n\n| Field | Description |\n|-------|-------------|\n| `message` | A human-readable confirmation string. |\n| `data.id` | The auto-generated ID of the newly created payment record. |\n| `data.amount` | The recorded payment amount. |\n| `data.payment_method` | The payment method used. |\n| `data.reference_number` | The reference number associated with the payment. |\n| `data.paid_at` | The date the payment was recorded (format: `YYYY-MM-DD`). |"
+          },
+          "response": []
+        },
+        {
+          "name": "Contract Summary",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "9|su6fg6JQgQWTHMkVSgHIwkCdbi6ZMV3bvWkQDlq59c9e44a0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}contracts/:id/summary",
+              "host": [
+                "{{base_url}}contracts"
+              ],
+              "path": [
+                ":id",
+                "summary"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "3"
+                }
+              ]
+            },
+            "description": "## Contract Summary\n\nRetrieves a financial summary for a specific contract, including total invoiced amount, total paid, outstanding balance, invoice count, and the date of the latest invoice.\n\n---\n\n### Path Variables\n\n| Variable | Type | Description |\n|----------|------|-------------|\n| `id` | integer | The unique identifier of the contract to retrieve the summary for. |\n\n---\n\n### Request Headers\n\n| Header | Value | Description |\n|--------|-------|-------------|\n| `Accept` | `application/json` | Specifies that the response should be returned in JSON format. |\n\n---\n\n### Response — `200 OK`\n\nReturns a financial summary object for the specified contract.\n\n```json\n{\n  \"message\": \"Contract Financial Summary Results\",\n  \"data\": {\n    \"contract_id\": 3,\n    \"total_invoiced\": \"9121.35\",\n    \"total_paid\": \"7103.31\",\n    \"outstanding_balance\": 2018.04,\n    \"invoices_count\": 3,\n    \"latest_invoice_date\": \"2026-02-27\"\n  }\n}\n```\n\n#### Response Fields\n\n| Field | Type | Description |\n|-------|------|-------------|\n| `message` | string | A human-readable message describing the result. |\n| `data.contract_id` | integer | The unique identifier of the contract. |\n| `data.total_invoiced` | string | The total amount invoiced under this contract (as a decimal string). |\n| `data.total_paid` | string | The total amount paid against this contract (as a decimal string). |\n| `data.outstanding_balance` | number | The remaining unpaid balance (`total_invoiced - total_paid`). |\n| `data.invoices_count` | integer | The total number of invoices associated with this contract. |\n| `data.latest_invoice_date` | string | The date of the most recent invoice, in `YYYY-MM-DD` format. |"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "User Details",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "9|su6fg6JQgQWTHMkVSgHIwkCdbi6ZMV3bvWkQDlq59c9e44a0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}user",
+              "host": [
+                "{{base_url}}user"
+              ]
+            },
+            "description": "## Get Authenticated User Details\n\nRetrieves the profile details of the currently authenticated user. This endpoint returns information about the user associated with the active session or token.\n\n---\n\n### HTTP Method & URL\n\n```\nGET {{base_url}}user\n```\n\n---\n\n### Request Headers\n\n| Header   | Value              | Description                          |\n|----------|--------------------|--------------------------------------|\n| `Accept` | `application/json` | Specifies that the response should be in JSON format |\n\n---\n\n### Response Fields\n\n| Field                | Type     | Description                                                                 |\n|----------------------|----------|-----------------------------------------------------------------------------|\n| `id`                 | integer  | Unique identifier of the user                                               |\n| `name`               | string   | Full name of the user                                                       |\n| `email`              | string   | Email address of the user                                                   |\n| `email_verified_at`  | string   | ISO 8601 timestamp indicating when the user's email was verified. `null` if not yet verified |\n| `tenant_id`          | integer  | ID of the tenant the user belongs to (used in multi-tenant setups)          |\n| `created_at`         | string   | ISO 8601 timestamp of when the user account was created                     |\n| `updated_at`         | string   | ISO 8601 timestamp of when the user account was last updated                |\n\n---\n\n### Example Response\n\n```json\n{\n  \"id\": 1,\n  \"name\": \"Ahmed\",\n  \"email\": \"test@example.com\",\n  \"email_verified_at\": \"2026-02-25T00:20:57.000000Z\",\n  \"tenant_id\": 1,\n  \"created_at\": \"2026-02-25T00:20:57.000000Z\",\n  \"updated_at\": \"2026-02-25T00:20:57.000000Z\"\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "User Login",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"test@example.com\",\r\n    \"password\": \"password\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}auth/login",
+              "host": [
+                "{{base_url}}auth"
+              ],
+              "path": [
+                "login"
+              ]
+            },
+            "description": "## User Login\n\nAuthenticates a user with their credentials and returns a bearer token to be used for subsequent authenticated requests.\n\n---\n\n### Request Body\n\nThe request body must be sent as **raw JSON**.\n\n| Field      | Type   | Required | Description                        |\n|------------|--------|----------|------------------------------------|\n| `email`    | string | ✅ Yes   | The registered email of the user.  |\n| `password` | string | ✅ Yes   | The account password of the user.  |\n\n**Example:**\n```json\n{\n  \"email\": \"test@example.com\",\n  \"password\": \"password\"\n}\n```\n\n---\n\n### Response\n\n#### ✅ 200 — Success\n\nReturns a success message, the authenticated user's details, and a bearer token.\n\n```json\n{\n  \"message\": \"User Logged in Successfully\",\n  \"data\": {\n    \"0\": {\n      \"id\": 1,\n      \"tenant_id\": 1,\n      \"name\": \"Ahmed\",\n      \"email\": \"test@example.com\",\n      \"email_verified_at\": \"2026-02-25T00:20:57.000000Z\"\n    },\n    \"token\": \"6|gLwCCMp9RUQsypgEOpUeKhHDUewTAtGzouoyIo...\"\n  }\n}\n```\n\n| Field                  | Type   | Description                                              |\n|------------------------|--------|----------------------------------------------------------|\n| `message`              | string | Confirmation message indicating successful login.        |\n| `data.0.id`            | integer| Unique identifier of the authenticated user.             |\n| `data.0.tenant_id`     | integer| The tenant the user belongs to.                          |\n| `data.0.name`          | string | Full name of the authenticated user.                     |\n| `data.0.email`         | string | Email address of the authenticated user.                 |\n| `data.0.email_verified_at` | string | ISO 8601 timestamp of when the email was verified.  |\n| `data.token`           | string | Bearer token to be used for authenticating future requests. |\n\n> **Note:** Include the returned `token` in the `Authorization` header of subsequent requests:\n> ```\n> Authorization: Bearer {{token}}\n> ```"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000/"
+    }
+  ]
+}

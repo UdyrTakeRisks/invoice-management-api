@@ -23,7 +23,7 @@ class CachingInvoiceRepository implements InvoiceRepositoryInterface
     {
         // Cache the result if not found go back to the repo (fallback)
         // Note: Cache invalidate in the invoice observer events
-        return Cache::remember('contract.invoice', 3600, function () use ($invoiceId) {
+        return Cache::remember("contract.invoice.{$invoiceId}", 3600, function () use ($invoiceId) {
             return $this->invoiceRepo->findById($invoiceId);
         });
     }

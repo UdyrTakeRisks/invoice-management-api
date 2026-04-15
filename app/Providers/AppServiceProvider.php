@@ -45,7 +45,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ContractRepositoryInterface::class, ContractRepository::class);
         $this->app->bind(PaymentRepositoryInterface::class, PaymentRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
-        
+
         // laracast reference: https://laracasts.com/discuss/channels/laravel/repository-pattern-with-caching-laravel
         // Caching layer using Decorator Pattern
         $this->app->bind(InvoiceRepositoryInterface::class, function () {
@@ -56,12 +56,12 @@ class AppServiceProvider extends ServiceProvider
 
         // laravel doc reference: https://laravel.com/docs/10.x/container#binding-typed-variadics
         // dependency injects an array with concrete class names when needed
-        $this->app->when(TaxService::class)
-            ->needs(TaxCalculatorInterface::class)
-            ->give([
-                VATTaxCalculator::class,
-                MunicipalFeeTaxCalculator::class,
-            ]);
+        $this->app->singleton(TaxService::class, function (Application $app) {
+            return new TaxService(
+                $app->make(VATTaxCalculator::class),
+                $app->make(MunicipalFeeTaxCalculator::class)
+            );
+        });
 
     }
 

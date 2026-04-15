@@ -54,10 +54,7 @@ class InvoiceService
             $contract = $this->contractRepo->findById($dto->contract_id);
 
             if ($contract->status->value != ContractStatusEnum::ACTIVE->value) {
-                throw new ContractNotActiveException(
-                    422,
-                    'The Contract is not Active, Please activate it in order to create an Invoice.',
-                );
+                throw new ContractNotActiveException();
             }
 
             // calculate taxes
@@ -69,6 +66,7 @@ class InvoiceService
 
             // store the invoice via repo
             $attributes = array_merge($tax, [
+                'tenant_id' => $dto->tenant_id,
                 'contract_id' => $contract->id,
                 'invoice_number' => $invoiceNumber,
                 'subtotal' => $dto->subtotal,
@@ -87,10 +85,7 @@ class InvoiceService
 
             // validate amount
             if ($dto->amount > $invoice->remaining_balance) {
-                throw new ExceededBalanceException(
-                    422,
-                    'The amount exceeds the remaining balance of the invoice',
-                );
+                throw new ExceededBalanceException();
             }
 
             $totalPayments = $dto->amount + $invoice->sum_payments;

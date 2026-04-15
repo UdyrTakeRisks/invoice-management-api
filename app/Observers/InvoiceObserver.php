@@ -15,7 +15,7 @@ class InvoiceObserver
      */
     public function created(Invoice $invoice): void
     {
-        Cache::forget('contract.invoice');
+
     }
 
     /**
@@ -23,7 +23,7 @@ class InvoiceObserver
      */
     public function updated(Invoice $invoice): void
     {
-        Cache::forget('contract.invoice');
+        Cache::forget("contract.invoice.{$invoice->id}");
 
         if ($invoice->status->value == InvoiceStatusEnum::PAID->value) {
             Log::info('Paid Invoice: ', InvoiceResource::make($invoice)->toArray(request()));
@@ -35,6 +35,6 @@ class InvoiceObserver
      */
     public function deleted(Invoice $invoice): void
     {
-        Cache::forget('contract.invoice');
+        Cache::forget("contract.invoice.{$invoice->id}");
     }
 }

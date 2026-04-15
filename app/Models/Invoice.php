@@ -3,14 +3,18 @@
 namespace App\Models;
 
 use App\Enums\InvoiceStatusEnum;
+use App\Models\Scopes\TenantScope;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+// #[ScopedBy(TenantScope::class)]
 class Invoice extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'tenant_id',
         'contract_id',
         'subtotal',
         'due_date',
@@ -28,6 +32,10 @@ class Invoice extends Model
     /**
      * relationships
      */
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class);
+    }
     public function contract()
     {
         return $this->belongsTo(Contract::class);

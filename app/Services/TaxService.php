@@ -16,11 +16,13 @@ class TaxService
 
     public function applyTotalTaxToAmount($amount)
     {
-        $totalTax = 0;
-        foreach ($this->taxCalculators as $taxCalculator) {
-            $totalTax += $taxCalculator->calculate($amount);
-        }
-
+        // $totalTax = 0;
+        // foreach ($this->taxCalculators as $taxCalculator) {
+        //     $totalTax += $taxCalculator->calculate($amount);
+        // }
+        // // array reduce
+        $totalTax = array_reduce($this->taxCalculators, fn($carry, $taxCalculator) => $carry += $taxCalculator->calculate($amount), 0.0);
+        
         $totalAmount = $amount + $totalTax;
         
         return [

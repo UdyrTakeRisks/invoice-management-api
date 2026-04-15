@@ -66,31 +66,4 @@ class InvoiceController extends Controller
             InvoiceResource::make($invoice)
         );
     }
-
-    public function record(RecordPaymentRequest $record, Invoice $invoice)
-    {
-        $this->authorize(PolicyTypeEnum::RECORD_PAYMENT->value, [Invoice::class, $invoice]);
-
-        $dto = RecordPaymentDTO::fromRequest($record, $invoice);
-
-        $payment = $this->invoiceService->recordPayment($dto);
-
-        return $this->created(
-            'Payment is recorded successfully',
-            PaymentResource::make($payment)
-        );
-    }
-
-    public function summary(Contract $contract)
-    {
-        $this->authorize(PolicyTypeEnum::VIEW_ANY->value, [Invoice::class, $contract]);
-
-        $contract = $this->invoiceService->getContractSummary($contract->id);
-
-        return $this->success(
-            'Contract Financial Summary Results',
-            ContractSummaryResource::make($contract)
-        );
-    }
-
 }
