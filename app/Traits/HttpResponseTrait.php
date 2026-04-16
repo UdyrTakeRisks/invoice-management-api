@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Traits;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 trait HttpResponseTrait
 {
-    protected function success($message, $data = [], $status = ResponseAlias::HTTP_OK): Response
+    protected function success($message, $data = [], $status = ResponseAlias::HTTP_OK): JsonResponse
     {
         $response = [
             'message' => $message,
@@ -16,7 +17,7 @@ trait HttpResponseTrait
         if (!is_array($data) && $data?->additional) // if data is not array, e.g Json collection
             $response['meta'] = $data->additional;
 
-        return response($response, $status);
+        return response()->json($response, $status);
     }
     protected function created($message, $data = [], $status = ResponseAlias::HTTP_CREATED): Response
     {
